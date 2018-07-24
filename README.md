@@ -72,7 +72,7 @@ Since Amaterasu has the ability to compile C# on-the-fly the code above can be m
 
 ###### Encoding Module
 ```c#
-// This module controls the encoding of a license file.
+// This module controls the encoding process of a license file.
 ```
 
 ###### Scripting Module
