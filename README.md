@@ -84,6 +84,8 @@ Since Amaterasu has the ability to compile C# on-the-fly the code above can be m
 // This module allows an alternative way to activate a license file.
 ```
 
+---
+
 #### Module Compilation & Use
 ```c#
 // This is an example of compiling the above modules and running them in sequence.
