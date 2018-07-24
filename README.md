@@ -92,3 +92,12 @@ Since Amaterasu has the ability to compile C# on-the-fly the code above can be m
 ```c#
 // This is an example of compiling the above modules and running them in sequence.
 ```
+##### Singular Compilation
+```c#
+// Some code here...
+```
+
+##### Chain Compilation
+```c#
+// Some code here...
+```
