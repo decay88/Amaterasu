@@ -9,7 +9,7 @@ Amaterasu is a lightweight licensing library for .NET applications which allows 
 - Generate C# code in-memory
 - Call managed assembly methods and cast types
 - Secure communcation between server and client
-- Create blacklists from arrays or from a `*NetRequest*`
+- Create blacklists from arrays or from a *`NetRequest`*
 - Manage the local filesystem using both managed and native methods
 - Built-in anti-debugging checking
 - User privilege enumeration
@@ -51,9 +51,11 @@ namespace Example
             string username = "someusername";
             string password = "somepassword";
 
-            // Create a new licensing object with our script urls and try activating a license.
+            // Set our script urls to use for authentication and activation.
             string verifcationScript = "https://www.yourwebsite.com/verification.php"; // Change this to your website.
             string supportScript = "https://www.yourwebsite.com/support.php"; // Change this to your website.
+            
+            // Create a new licensing object with our script urls and try activating a license.
             Licensing manager = new Licensing(verifcationScript, supportScript);
             if (manager.ActivateLicense(publicKey, username, password, licenseFile))
                 Console.WriteLine("The license has successfully been activated!");
@@ -73,7 +75,7 @@ namespace Example
 Since Amaterasu has the ability to compile C# on-the-fly the code above can be modified to behave differently without actually modifying the library source. Using this feature in conjuction with the availble features in the library facilitates the possibility of creating a unique licensing schema by writing multiple modules and compiling them as need within a method. An example of this would be to have code check certain aspects of a license file which in turn references another runtime compiled module to actually do any activation or managing of said license. Shown below is a example of compiling an *AMC* or *Authentication Module Chain* that decodes a license, reroutes data validation scripts, and activates the license:
 
 
-The main namespace which will encapsulate the following code will be: `namespace Dynamic`
+The main namespace which will encapsulate the following code will be `namespace DynamicCode`. Each module should be placed either in seperate text documents or all in the same document, but, each module **MUST** have the same namespace in order to be utilized properly when exploring the compiled assembly.
 
 ###### Encoding Module
 ```c#
