@@ -29,7 +29,7 @@ Amaterasu is a lightweight licensing library for .NET applications which allows 
 # Examples
 ### License Activation
 
-In order to utilize the license activation methods you must first write two scripts for both validating data as well as one for actually handling the updating and activation of license files; the library uses **POST** requests, usually sent to PHP scripts, which handle all of the server side calculations and managing. The first script is known as the `*Verification Script*` and the second is recognized as the `*Support Script*`. Here's how they are meant to be used:
+In order to utilize the license activation methods you must first write two scripts for both validating data as well as one for actually handling the updating and activation of license files; the library uses **POST** requests, usually sent to PHP scripts, which handle all of the server side calculations and managing. The first script is known as the *`Verification Script`* and the second is recognized as the *`Support Script`*. Here's how they are meant to be used:
 
 ```c#
 using System;
