@@ -9,7 +9,7 @@ Amaterasu is a lightweight licensing library for .NET applications which allows 
 - Generate C# code in-memory
 - Call managed assembly methods and cast types
 - Secure communcation between server and client
-- Create blacklists from arrays or from a *NetRequest*
+- Create blacklists from arrays or from a `*NetRequest*`
 - Manage the local filesystem using both managed and native methods
 - Built-in anti-debugging checking
 - User privilege enumeration
@@ -29,7 +29,7 @@ Amaterasu is a lightweight licensing library for .NET applications which allows 
 # Examples
 ### License Activation
 
-In order to utilize the license activation methods you must first write two scripts for both validating data as well as one for actually handling the updating and activation of license files; the library uses **POST** requests, usually sent to PHP scripts, which handle all of the server side calculations and managing. The first script is known as the *Verification Script* and the second is recognized as the *Support Script*. Here's how they are meant to be used:
+In order to utilize the license activation methods you must first write two scripts for both validating data as well as one for actually handling the updating and activation of license files; the library uses **POST** requests, usually sent to PHP scripts, which handle all of the server side calculations and managing. The first script is known as the `*Verification Script*` and the second is recognized as the `*Support Script*`. Here's how they are meant to be used:
 
 ```c#
 using System;
@@ -71,6 +71,9 @@ namespace Example
 ``` TODO: Finish readme...```
 
 Since Amaterasu has the ability to compile C# on-the-fly the code above can be modified to behave differently without actually modifying the library source. Using this feature in conjuction with the availble features in the library facilitates the possibility of creating a unique licensing schema by writing multiple modules and compiling them as need within a method. An example of this would be to have code check certain aspects of a license file which in turn references another runtime compiled module to actually do any activation or managing of said license. Shown below is a example of compiling an *AMC* or *Authentication Module Chain* that decodes a license, reroutes data validation scripts, and activates the license:
+
+
+The main namespace which will encapsulate the following code will be: `namespace Dynamic`
 
 ###### Encoding Module
 ```c#
