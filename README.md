@@ -6,9 +6,9 @@ Amaterasu is a lightweight licensing library for .NET applications which allows 
 
 # Features
 - Activate and manage license files using web scripts
-- Generate C# code in-memory
-- Call managed assembly methods and cast types
-- Secure communcation between server and client
+- Generate and explore C# code in-memory
+- Call managed assembly modules, methods, and types
+- Secure communcation layer between licensing server and client
 - Create blacklists from arrays or from a *`NetRequest`*
 - Manage the local filesystem using both managed and native methods
 - Built-in anti-debugging checking
@@ -75,20 +75,50 @@ namespace Example
 Since Amaterasu has the ability to compile C# on-the-fly the code above can be modified to behave differently without actually modifying the library source. Using this feature in conjuction with the availble features in the library facilitates the possibility of creating a unique licensing schema by writing multiple modules and compiling them as need within a method. An example of this would be to have code check certain aspects of a license file which in turn references another runtime compiled module to actually do any activation or managing of said license. Shown below is a example of compiling an *AMC* or *Authentication Module Chain* that decodes a license, reroutes data validation scripts, and activates the license:
 
 
-The main namespace which will encapsulate the following code will be ```c# namespace DynamicCode```. Each module should be placed either in seperate text documents or all in the same document, but, each module **MUST** have the same namespace in order to be utilized properly when exploring the compiled assembly.
+The main namespace which will encapsulate the following code will be `c#namespace DynamicCode`. Each module should be placed either in seperate text documents or all in the same document, but, each module **MUST** have the same namespace in order to be utilized properly when exploring the compiled assembly.
 
 ###### Encoding Module
 ```c#
-// This module controls the encoding process of a license file.
+using System;
+using System.Security.Cryptography;
+using Amaterasu;
+
+namespace DynamicCode
+{
+    public static class Encoding
+    {
+        /// <summary>
+        /// Decrypts a license file for further processing.
+        /// </summary>
+        /// <param name="publicKey">The <see cref="RSACryptoServiceProvider"/> XML formatted public key.</param>
+        /// <param name="licenseFile">The license file to decrypt.</param>
+        public static string DecryptLicense(string publicKey, string licenseFile)
+        {
+            RSACryptoServiceProvider provider = new RSACryptoServiceProvider();
+            provider.FromXmlString(publicKey);
+            var encryptedBytes = licenseFile.GetBytes();
+            var decryptedBytes = provider.Decrypt(encryptedBytes, false);
+            return decryptedBytes.GetString();
+        }
+
+        /// <summary>
+        /// Converts and decodes a license file into a readable format.
+        /// </summary>
+        /// <param name="licenseFile">The license file to decode.</param>
+        public static string DecodeLicense(string licenseFile)
+        {
+            // Some parsing could be done here too, or seperately.
+            var encoded = licenseFile;
+            var decoded = Convert.FromBase64String(encoded).GetString();
+            return decoded;
+        }
+    }
+}
 ```
 
 ###### Scripting Module
 ```c#
 // This module provides an interface for validating and chunking data.
-```
-###### Activation Module
-```c#
-// This module allows an alternative way to activate a license file.
 ```
 
 ---
@@ -97,12 +127,7 @@ The main namespace which will encapsulate the following code will be ```c# names
 ```c#
 // This is an example of compiling the above modules and running them in sequence.
 ```
-##### Singular Compilation
-```c#
-// Some code here...
-```
-
-##### Chain Compilation
+##### Assembly Exploration
 ```c#
 // Some code here...
 ```
