@@ -275,7 +275,7 @@ namespace DynamicCode
             catch
             {
                 rsa.Clear();
-                return false; // The key could not be decrypted.
+                return false; // The data could not be decrypted.
             }
         }
     }
@@ -285,8 +285,43 @@ namespace DynamicCode
 ---
 
 #### Module Compilation & Use
+
+This is a simple example showcasing how to compile the above modules from a single code document using built-in .NET modules and the *Amaterasu* library itself as well as defining specific aforementioned module imports.
+
 ```c#
-// This is an example of compiling the above modules and running them in sequence.
+using System;
+using System.IO;
+using System.Collections.Generic;
+using Amaterasu;
+
+namespace Example
+{
+    public static class Program
+    {
+        public static void Main(string[] args)
+        {
+            /* We will read our code from a single document, however, you can have as many as
+            you would like and compile them at different points during the application. */
+            string code = File.ReadAllText("PathToCodeFile");
+
+            // Create a list of our imports (optional).
+            List<string> imports = new List<string>();
+            imports.Add("System.dll");
+            imports.Add("System.Security.dll");
+            imports.Add("Amaterasu.dll");
+
+            // Create a new assembly compiler and compile our code.
+            AssemblyCompiler compiler = new AssemblyCompiler();
+            var assembly = compiler.Compile(code, imports.ToArray());
+
+            // Display the assembly's name.
+            Console.WriteLine(assembly.FullName);
+
+            // Wait for user input.
+            Console.Read();
+        }
+    }
+}
 ```
 ##### Assembly Exploration
 ```c#
