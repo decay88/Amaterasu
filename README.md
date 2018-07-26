@@ -77,7 +77,7 @@ The main namespace which will encapsulate the following code will be `namespace 
 
 ###### Encoding Module
 
-##### This module is responsible for taking care of all data encoding and or encryption transformations. 
+This module is responsible for taking care of all data encoding and or encryption transformations. 
 
 ```c#
 using System;
@@ -119,7 +119,7 @@ namespace DynamicCode
 
 ###### Scripting Module
 
-##### This module is responsible for all authentication and activation of license files and public keys. It resembles the structure of the current scripting schema presently found in the library and can be edited and compiled on-the-fly either at compile time or even runtime; for instance, you can write a scripting generator which in turn would compile and run selected methods with a command or a button press depending on the selected projects interface.
+This module is responsible for all authentication and activation of license files and public keys. It resembles the structure of the current scripting schema presently found in the library and can be edited and compiled on-the-fly either at compile time or even runtime; for instance, you can write a scripting generator which in turn would compile and run selected methods with a command or a button press depending on the selected projects interface.
 
 ```c#
 using System;
@@ -286,7 +286,7 @@ namespace DynamicCode
 
 #### Module Compilation & Use
 
-##### This is a simple example showcasing how to compile the above modules from a single code document using built-in .NET modules and the *Amaterasu* library itself as well as defining specific aforementioned module imports.
+This is a simple example showcasing how to compile the above modules from a single code document using built-in .NET modules and the *Amaterasu* library itself as well as defining specific aforementioned module imports.
 
 ```c#
 using System;
