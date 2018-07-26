@@ -6,7 +6,7 @@ Amaterasu is a lightweight licensing library for .NET applications which allows 
 
 # Features
 - Activate and manage license files using web scripts
-- Generate and explore C# code in-memory
+- Dynamically generate and explore C# code *in-memory*
 - Call managed assembly modules, methods, and types
 - Secure communcation layer between licensing server and client
 - Create blacklists from arrays or from a *`NetRequest`*
