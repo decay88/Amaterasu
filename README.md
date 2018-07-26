@@ -76,6 +76,9 @@ Since Amaterasu has the ability to compile C# on-the-fly the code above can be m
 The main namespace which will encapsulate the following code will be `namespace DynamicCode`. Each module should be placed either in seperate text documents or all in the same document, but, each module **MUST** have the same namespace in order to be utilized properly when exploring the compiled assembly.
 
 ###### Encoding Module
+
+This module is responsible for taking care of all data encoding and or encryption transformations. 
+
 ```c#
 using System;
 using System.Security.Cryptography;
@@ -115,6 +118,9 @@ namespace DynamicCode
 ```
 
 ###### Scripting Module
+
+This module is responsible for all authentication and activation of license files and public keys.
+
 ```c#
 using System;
 using System.Security.Cryptography;
