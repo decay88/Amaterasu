@@ -116,7 +116,164 @@ namespace DynamicCode
 
 ###### Scripting Module
 ```c#
-// This module provides an interface for validating and chunking data.
+using System;
+using System.Security.Cryptography;
+using Amaterasu;
+
+namespace DynamicCode
+{
+    public static class Scripting
+    {
+        private static string verificationScript { get; set; }
+        private static string supportScript { get; set; }
+
+        /// <summary>
+        /// The address of the script which will handle all license and key authentication.
+        /// </summary>
+        public static string VerificationScript
+        {
+            get { return verificationScript; }
+            set { verificationScript = value; }
+        }
+
+        /// <summary>
+        /// The address of the script which will handle the management and activation of licenses.
+        /// </summary>
+        public static string SupportScript
+        {
+            get { return supportScript; }
+            set { supportScript = value; }
+        }
+
+        /// <summary>
+        /// Activates a license file with a specified authentication server.
+        /// </summary>
+        /// <param name="publicKey">The public key created when the license was generated.</param>
+        /// <param name="licenseFile">The license file to activate.</param>
+        public static bool ActivateLicense(string publicKey, string licenseFile)
+        {
+            // Check if our key and license is valid and or expired.
+            if (IsKeyValid(publicKey))
+            {
+                if (IsLicenseValid(publicKey, licenseFile))
+                {
+                    if (!IsLicenseExpired(publicKey, licenseFile))
+                    {
+                        // From here you could explore the array of parsed license items or continue directly with activation.
+                        var parsedLicense = ParseLicense(licenseFile);
+
+                        // Initialize a new RSA provider in order to encrypt the license.
+                        RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+                        rsa.FromXmlString(publicKey);
+
+                        // Send our license to the server for activation.
+                        var encryptedLicense = rsa.Encrypt(licenseFile.GetBytes(), false).GetString();
+                        var requestParameter = "activaton";
+                        var requestData = requestParameter + "=" + encryptedLicense; // Include an equals sign because we're posting to a PHP script.
+                        NetRequest request = new NetRequest(verificationScript, NetRequest.RequestType.POST, requestData);
+
+                        // Return whether or not the activation was successful.
+                        return bool.Parse(request.GetResponse());
+                    }
+                }   
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Validates an <see cref="RSACryptoServiceProvider"/> public key with a verfication server.
+        /// </summary>
+        /// <param name="publicKey">The public key to validate with the server.</param>
+        public static bool IsKeyValid(string publicKey)
+        {
+            var requestParameter = "ping";
+            var requestData = requestParameter + "=" + "pong"; // Include an equals sign because we're posting to a PHP script.
+            NetRequest request = new NetRequest(VerificationScript, NetRequest.RequestType.POST, requestData);
+            string response = request.GetResponse();
+
+            // Try to decrypt our response.
+            if (DecryptData(publicKey, response.GetBytes()))
+                return true; // The key is good.
+            return false; // The key could not be authenticated.
+        }
+
+        /// <summary>
+        /// Validates a license file with a verification server.
+        /// </summary>
+        /// <param name="publicKey">An <see cref="RSACryptoServiceProvider"/> public key created when the license was generated.</param>
+        /// <param name="licenseFile">The license file to validate.</param>
+        public static bool IsLicenseValid(string publicKey, string licenseFile)
+        {
+            // Create a new RSA provider in order to encrypt the license.
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(publicKey);
+
+            // Send our license to the server to check validity.
+            var encryptedLicense = rsa.Encrypt(licenseFile.GetBytes(), false).GetString();
+            var requestParam = "validation";
+            var requestData = requestParam + "=" + encryptedLicense; // Include an equals sign because we're posting to a PHP script.
+            NetRequest request = new NetRequest(verificationScript, NetRequest.RequestType.POST, requestData);
+
+            // Return our server's response.
+            return bool.Parse(request.GetResponse());
+        }
+
+        /// <summary>
+        /// Checks if a license if expired or not.
+        /// </summary>
+        /// <param name="publicKey">An <see cref="RSACryptoServiceProvider"/> public key created when the license was generated.</param>
+        /// <param name="licenseFile">The license file to check.</param>
+        public static bool IsLicenseExpired(string publicKey, string licenseFile)
+        {
+            // Decrypt the license to obtain its info.
+            string decryptedLicense = Encoding.DecryptLicense(publicKey, licenseFile);
+
+            // Parse the decrypted license.
+            var parsed = ParseLicense(decryptedLicense);
+
+            // Check the timestamp of the license to determine if the license is expired.
+            DateTime past = DateTime.Parse(parsed[0]); // The timestamp could be at any index in the array.
+            if (past < DateTime.Now)
+                return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Parses all parts of a license file.
+        /// </summary>
+        /// <param name="licenseFile">The license file to parse.</param>
+        private static string[] ParseLicense(string licenseFile)
+        {
+            // Split the license using an uncommon character.
+            var parsed = licenseFile.Split('|');
+
+            // Return our array if its length is greater than zero.
+            return (parsed.Length > 0) ? parsed : null;
+        }
+
+        /// <summary>
+        /// Decrypts data using an <see cref="RSACryptoServiceProvider"/> public key.
+        /// </summary>
+        /// <param name="key">The public key used to decrypt the date.</param>
+        /// <param name="data">The data to decrypt.</param>
+        private static bool DecryptData(string key, byte[] data)
+        {
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(key);
+            try
+            {
+                // If we don't error while mapping memory then we're valid.
+                byte[] decrypted = rsa.Decrypt(data, false);
+                return true;
+            }
+            catch
+            {
+                rsa.Clear();
+                return false; // The key could not be decrypted.
+            }
+        }
+    }
+}
 ```
 
 ---
