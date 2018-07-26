@@ -74,10 +74,10 @@ namespace Example
 ```
 ### Dynamic Code Compilation
 
-Since Amaterasu has the ability to compile C# on-the-fly the code above can be modified to behave differently without actually modifying the library source. Using this feature in conjuction with the availble features in the library facilitates the possibility of creating a unique licensing schema by writing multiple modules and compiling them as need within a method. An example of this would be to have code check certain aspects of a license file which in turn references another runtime compiled module to actually do any activation or managing of said license. Shown below is a example of compiling an *AMC* or *Authentication Module Chain* that decodes a license, reroutes data validation scripts, and activates the license:
+Since Amaterasu has the ability to compile C# on-the-fly the code above can be modified to behave differently without actually modifying the library source. Using this feature in conjuction with the availble features in the library facilitates the possibility of creating a unique licensing schema by writing multiple modules and compiling them as need within a method. An example of this would be to have code check certain aspects of a license file which in turn references another runtime compiled module to actually do any activation or managing of said license. Shown below is a example of compiling an *`AMC`* or *`Authentication Module Chain`* that decodes a license, reroutes data validation scripts, and activates the license:
 
 
-The main namespace which will encapsulate the following code will be `namespace DynamicCode`. Each module should be placed either in seperate text documents or all in the same document, but, each module **MUST** have the same namespace in order to be utilized properly when exploring the compiled assembly.
+The main namespace which will encapsulate the following code will be `namespace DynamicCode`. Each module should be placed either in seperate text documents or all in the same document, however, each module **MUST** have the same namespace in order to be utilized properly when exploring the compiled assembly.
 
 ###### Encoding Module
 
@@ -191,11 +191,12 @@ namespace DynamicCode
         }
 
         /// <summary>
-        /// Validates an <see cref="RSACryptoServiceProvider"/> public key with a verfication server.
+        /// Validates an <see cref="RSACryptoServiceProvider"/> public key with an authentication server.
         /// </summary>
         /// <param name="publicKey">The public key to validate with the server.</param>
         public static bool IsKeyValid(string publicKey)
         {
+            // Request a chunk of encrypted data from the server.
             var requestParameter = "ping";
             var requestData = requestParameter + "=" + "pong"; // Include an equals sign because we're posting to a PHP script.
             NetRequest request = new NetRequest(VerificationScript, NetRequest.RequestType.POST, requestData);
@@ -208,7 +209,7 @@ namespace DynamicCode
         }
 
         /// <summary>
-        /// Validates a license file with a verification server.
+        /// Validates a license file with an authentication server.
         /// </summary>
         /// <param name="publicKey">An <see cref="RSACryptoServiceProvider"/> public key created when the license was generated.</param>
         /// <param name="licenseFile">The license file to validate.</param>
@@ -290,7 +291,7 @@ namespace DynamicCode
 
 #### Module Compilation & Use
 
-This is a simple example showcasing how to compile the above modules from a single code document using built-in .NET modules and the *Amaterasu* library itself as well as defining the aforementioned module imports.
+This is a simple example showcasing how to compile the above modules from a single code document using built-in .NET modules and the *Amaterasu* library itself by defining the aforementioned module imports in a list.
 
 ```c#
 using System;
@@ -329,7 +330,7 @@ namespace Example
 ```
 #### Assembly Exploration
 
-Exploring a compiled assembly, calling methods, and obtaining types is rather simple given the `AssemblyInfo` type provided within the *Amaterasu* library. Using the same method as above we'll compile an assembly from a single document and obtain all of its methods and types. After we have obtained an object containing all of the assembly's info we can then call a few methods using the provided assembly information type to register a license.
+Exploring a compiled assembly, calling methods, and obtaining types is rather simple given the `AssemblyInfo` type provided within the *Amaterasu* library. Using the same method as above we'll compile an assembly from a single document and obtain all of its methods and types. After we have obtained an object containing all of the assembly's info we can explore it or call our activation method in order to register a license.
 
 ```c#
 using System;
@@ -352,7 +353,7 @@ namespace Example
             var assembly = compiler.Compile(code, imports);
 
             // Get the information about the assembly.
-            AssemblyInfo info = compiler.ExpoloreAssembly(assembly);
+            AssemblyInfo info = compiler.GetAssemblyInfo(assembly);
 
             // Print all modules within the assembly.
             foreach (var module in info.Modules)
@@ -397,9 +398,9 @@ namespace Example
         /// Activates a license file using an in-memory compiled assembly.
         /// </summary>
         /// <param name="compiled">The assembly that was compiled in-memory.</param>
-        public Activator(Assembly compiled)
+        public Activator(Assembly compiledAssembly)
         {
-            CompiledAssembly = compiled;
+            CompiledAssembly = compiledAssembly;
         }
 
         /// <summary>
@@ -428,6 +429,10 @@ namespace Example
 
 # License
 
+Copyright © ∞ Jason Tanner (Antebyte)
+
+All rights reserved.
+
 The MIT License (MIT)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -448,6 +453,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-Except as contained in this notice, the author of the above Software
+Except as contained in this notice, the name of the above copyright holder
 shall not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization.
