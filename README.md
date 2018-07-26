@@ -325,7 +325,7 @@ namespace Example
 ```
 ##### Assembly Exploration
 
-Exploring a compiled assembly, calling methods, and obtaining types is rather simple given the `AssemblyInfo` type provided with the *Amaterasu* library. Using the same method as above we'll compile an assembly from a single document, obtain all of its methods and types, and call a few methods using the provided info type to register a license.
+Exploring a compiled assembly, calling methods, and obtaining types is rather simple given the `AssemblyInfo` type provided with the *Amaterasu* library. Using the same method as above we'll compile an assembly from a single document and obtain all of its methods and types, we'll then call a few methods using the provided info type to register a license.
 
 ```c#
 // Some code here...
