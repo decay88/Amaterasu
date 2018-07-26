@@ -49,7 +49,7 @@ namespace Amaterasu
     public class AssemblyCompiler
     {
         #region Initialization
-        
+
         /// <summary>
         /// Allows for on-the-fly compilation and execution of C# code.
         /// </summary>
@@ -131,7 +131,7 @@ namespace Amaterasu
         /// Obtains all modules, types, and methods within a managed assembly.
         /// </summary>
         /// <param name="assembly">The assembly to obtain information about.</param>
-        public AssemblyInfo ExpoloreAssembly(Assembly assembly)
+        public AssemblyInfo GetAssemblyInfo(Assembly assembly)
         {
             AssemblyInfo info = new AssemblyInfo();
             foreach (Module m in assembly.GetModules())

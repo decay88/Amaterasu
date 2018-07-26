@@ -152,7 +152,7 @@ namespace DynamicCode
         }
 
         /// <summary>
-        /// Activates a license file with a specified authentication server.
+        /// Activates a license file with an authentication server.
         /// </summary>
         /// <param name="publicKey">The public key created when the license was generated.</param>
         /// <param name="licenseFile">The license file to activate.</param>
@@ -286,7 +286,7 @@ namespace DynamicCode
 
 #### Module Compilation & Use
 
-This is a simple example showcasing how to compile the above modules from a single code document using built-in .NET modules and the *Amaterasu* library itself as well as defining specific aforementioned module imports.
+This is a simple example showcasing how to compile the above modules from a single code document using built-in .NET modules and the *Amaterasu* library itself as well as defining the aforementioned module imports.
 
 ```c#
 using System;
@@ -323,10 +323,127 @@ namespace Example
     }
 }
 ```
-##### Assembly Exploration
+#### Assembly Exploration
 
-Exploring a compiled assembly, calling methods, and obtaining types is rather simple given the `AssemblyInfo` type provided with the *Amaterasu* library. Using the same method as above we'll compile an assembly from a single document and obtain all of its methods and types, we'll then call a few methods using the provided info type to register a license.
+Exploring a compiled assembly, calling methods, and obtaining types is rather simple given the `AssemblyInfo` type provided within the *Amaterasu* library. Using the same method as above we'll compile an assembly from a single document and obtain all of its methods and types. After we have obtained an object containing all of the assembly's info we can then call a few methods using the provided assembly information type to register a license.
 
 ```c#
-// Some code here...
+using System;
+using System.IO;
+using System.Reflection;
+using Amaterasu;
+
+namespace Example
+{
+    public static class Program
+    {
+        public static void Main(string[] args)
+        {
+            // Read in our code from a document and create an imports array (optional).
+            string code = File.ReadAllText("PathToCode");
+            string[] imports = new string[] { "System.dll", "System.Security.dll", "Amaterasu.dll" };
+
+            // Create a new assembly compiler and compile our code.
+            AssemblyCompiler compiler = new AssemblyCompiler();
+            var assembly = compiler.Compile(code, imports);
+
+            // Get the information about the assembly.
+            AssemblyInfo info = compiler.ExpoloreAssembly(assembly);
+
+            // Print all modules within the assembly.
+            foreach (var module in info.Modules)
+                Console.WriteLine("Module: {0}", module.Name);
+
+            // Print each type within the assembly.
+            foreach (var type in info.Types)
+                Console.WriteLine("Type: {0}", type.Name);
+
+            // Print each method within the assembly.
+            foreach (var method in info.Methods)
+                Console.WriteLine("Method: {0}", method.Name);
+
+            // Try activating a license using the compiled assembly.
+            var publicKey = File.ReadAllText("PathToPublicKey");
+            var licenseFile = File.ReadAllText("PathToLicense");
+            Activator activator = new Activator(assembly);
+            var result = activator.ActivateLicense(publicKey, licenseFile);
+
+            // Print our result (which should be a bool) to the console.
+            Console.WriteLine("License Activated: {0}", result);
+
+            // Wait for user input.
+            Console.Read();
+        }
+    }
+
+    class Activator
+    {
+        private Assembly _compiledAssembly { get; set; }
+
+        /// <summary>
+        /// The assembly that was compiled in-memory.
+        /// </summary>
+        public Assembly CompiledAssembly 
+        { 
+            get { return _compiledAssembly; } 
+            private set { _compiledAssembly = value; }
+        }
+
+        /// <summary>
+        /// Activates a license file using an in-memory compiled assembly.
+        /// </summary>
+        /// <param name="compiled">The assembly that was compiled in-memory.</param>
+        public Activator(Assembly compiled)
+        {
+            CompiledAssembly = compiled;
+        }
+
+        /// <summary>
+        /// Activates a license file using an authentication server.
+        /// </summary>
+        /// <param name="publicKey">The public key created when the license was generated.</param>
+        /// <param name="licenseFile">The license file to be activated.</param>
+        public object ActivateLicense(string publicKey, string licenseFile)
+        {
+            // Set what method we'll be running and its parameters.
+            string rootNamespace = "DynamicCode";
+            string rootClass = "Scripting";
+            string methodName = "ActivateLicense";
+            object[] methodParameters = new object[] { publicKey, licenseFile };
+
+            // Create a new assembly compiler and try running the method.
+            AssemblyCompiler compiler = new AssemblyCompiler();
+            var result = compiler.Run(_compiledAssembly, rootNamespace, rootClass, methodName, parameters);
+
+            // Return any objects of the method or null if it's a void.
+            return result;
+        }
+    }
+}
 ```
+
+# License
+
+The MIT License (MIT)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Except as contained in this notice, the author of the above Software
+shall not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization.
