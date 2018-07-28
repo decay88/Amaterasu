@@ -6,7 +6,6 @@
 <p align="left">
     <img src="https://img.shields.io/badge/release-1.0.0-brightgreen.svg">
     <img src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg">
-    <img src="https://img.shields.io/hackage-deps/v/lens.svg">
     <img src="https://img.shields.io/badge/docs-not%20found-lightgrey.svg">
     <img src="https://img.shields.io/packagist/l/doctrine/orm.svg">
 </p>
