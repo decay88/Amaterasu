@@ -10,7 +10,7 @@
     <!-- Docs -->
     <img src="https://img.shields.io/badge/docs-not%20found-lightgrey.svg">
     <!-- License -->
-    <img src="https://img.shields.io/packagist/l/doctrine/orm.svg">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg">
 </p>
 
 Amaterasu is a lightweight licensing library for .NET applications which allows the managing of licenses via web based scripts and on-the-fly code compilation. The library also includes common encryption and hashing algorithms such as AES and SHA to ensure that data is protected when communcating with the licensing server; however, since runtime code compilation is available, all methods currently used for licensing can be replaced with custom written modules instead of utilizing the prebuilt licensing structure.
