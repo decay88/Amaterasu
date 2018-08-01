@@ -5,7 +5,7 @@
 # Amaterasu
 <p align="left">
     <!-- Version -->
-    <img src="https://img.shields.io/badge/release-1.0.0-brightgreen.svg">
+    <img src="https://img.shields.io/badge/version-1.0.0-brightgreen.svg">
     <!-- <img src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg"> -->
     <!-- Docs -->
     <img src="https://img.shields.io/badge/docs-not%20found-lightgrey.svg">
